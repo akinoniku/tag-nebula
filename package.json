@@ -15,7 +15,8 @@
     "jade": "~1.2.0",
     "connect-redis": "~2.0.0",
     "redis": "~0.10.1",
-    "hiredis": "~0.1.16"
+    "hiredis": "~0.1.16",
+    "then-redis": "~0.3.12"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
@@ -64,7 +65,8 @@
     "grunt-env": "~0.4.1",
     "grunt-node-inspector": "~0.1.3",
     "grunt-nodemon": "~0.2.0",
-    "open": "~0.0.4"
+    "open": "~0.0.4",
+    "mocha": "~1.18.2"
   },
   "engines": {
     "node": ">=0.10.0"

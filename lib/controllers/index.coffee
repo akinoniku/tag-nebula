@@ -1,9 +1,7 @@
 "use strict"
 path = require("path")
 
-###
-Send partial, or 404 if it doesn't exist
-###
+### Send partial, or 404 if it doesn't exist ###
 exports.partials = (req, res) ->
   stripped = req.url.split(".")[0]
   requestedView = path.join("./", stripped)
@@ -15,8 +13,6 @@ exports.partials = (req, res) ->
     else
       res.send html
 
-###
-Send our single page app
-###
+### Send our single page app ###
 exports.index = (req, res) ->
   res.render "index"
