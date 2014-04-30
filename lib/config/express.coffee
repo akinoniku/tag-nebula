@@ -6,7 +6,6 @@ compression = require("compression")
 bodyParser = require("body-parser")
 methodOverride = require("method-override")
 cookieParser = require("cookie-parser")
-#redis = require("redis")
 redis = require('then-redis');
 redis_db = redis.createClient()
 session = require("express-session")
@@ -44,7 +43,8 @@ module.exports = (app) ->
   app.use bodyParser()
   app.use methodOverride()
   app.use cookieParser()
-  app.use session({store: new RedisStore({client: redis_db}), secret: 'keyboard cat', cookie: { maxAge: 60000 }})
+  # FIXME
+  app.use session({store: new RedisStore({client: require("redis").createClient()}), secret: 'keyboard cat', cookie: { maxAge: 60000 }})
 
   # Error handler - has to be last
   app.use errorHandler()  if "development" is app.get("env")
