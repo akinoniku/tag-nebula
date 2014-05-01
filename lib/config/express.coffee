@@ -12,6 +12,7 @@ session = require("express-session")
 RedisStore = require('connect-redis')(session)
 errorHandler = require("errorhandler")
 path = require("path")
+passport = require("passport")
 config = require("./config")
 
 ### Express configuration ###
@@ -43,8 +44,11 @@ module.exports = (app) ->
   app.use bodyParser()
   app.use methodOverride()
   app.use cookieParser()
-  # FIXME
   app.use session({store: new RedisStore({client: require("redis").createClient()}), secret: 'keyboard cat', cookie: { maxAge: 60000 }})
+
+  # Use passport session
+  app.use passport.initialize()
+  app.use passport.session()
 
   # Error handler - has to be last
   app.use errorHandler()  if "development" is app.get("env")

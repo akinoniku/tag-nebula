@@ -9,6 +9,9 @@ Main application file
 process.env.NODE_ENV = process.env.NODE_ENV or "development"
 config = require("./lib/config/config")
 
+# Passport Configuration
+passport = require("./lib/config/passport")
+
 # Setup Express
 app = express()
 require("./lib/config/express") app

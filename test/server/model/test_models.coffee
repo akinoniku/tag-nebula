@@ -1,8 +1,7 @@
 'use strict'
 UrlSortedSetOfTags = require '../../../lib/models/url_sorted_set_of_tags'
 TagSetOfUserUrl= require '../../../lib/models/tag_set_of_user_url'
-#app = require('../../../server')
-#request = require('supertest')
+User = require '../../../lib/models/user'
 should = require('should')
 
 user_id = 1
@@ -22,6 +21,7 @@ describe 'UrlSortedSetOfTags', ()->
   it 'add once', (done)->
     url_tag.add()
     url_tag.get_score().then (score)->
+      console.log 'should.js is not working :('
       console.log score, 'should be 1'
       #(score).should.equal(1)
       done()
@@ -130,3 +130,30 @@ describe 'UrlSortedSetOfTags', ()->
                     console.log 'total_amount 5 shoule be ', result
                     done()
 
+describe 'User Tests', ()->
+  before (done) ->
+    done()
+
+  afterEach (done) ->
+    done()
+
+  it 'create user', (done)->
+    user = new User('aki')
+    user.remove().then ->
+      user.create('123').then (result)->
+        console.log 'OK should be', result
+        user.create('123').then (result)->
+          console.error 'should not be done', result
+        ,
+        (err)->
+          console.log 'should be error', err
+          done()
+
+  it 'login user', (done) ->
+    user = new User('aki')
+    user.remove().then ->
+      user.create('123').then ->
+        user.login('123', 'local', (result)->
+          console.log 'login should be true:', result
+          done();
+        )

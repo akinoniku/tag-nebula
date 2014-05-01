@@ -1,8 +1,6 @@
 "use strict"
 
-###
-Get awesome things
-###
+### Get awesome things ###
 exports.awesomeThings = (req, res) ->
   res.json [
     {
