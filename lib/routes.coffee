@@ -17,25 +17,27 @@ module.exports = (app) ->
   # Server API Routes
   app.route("/api/awesomeThings").get api.awesomeThings
 
+  #tags
+  app.route("/api/tags_of_url/:url").post(api.add_tags_of_url).get(api.get_tags_of_url)
+
   # user
   app.route("/api/users").post(users.create)
 
-  app.post '/login', passport.authenticate('local')
+  app.post '/login', passport.authenticate('local', { session: true })
   app.get '/logout', (req, res)->
     req.logout()
     res.send 200
 
   app.get '/api/users/me',
-    passport.authenticate('basic', { session: true }),
-    (req, res)->  res.json({ id: req.user.id, username: req.user.username })
+    passport.authenticate('local', { session: true }),
+  (req, res)->  res.json user_id: req.user.user_id
 
-  #api.route("/api/user")
-  
+  app.route("/api/me").get(users.me)
+
   # All undefined api routes should return a 404
   app.route("/api/*").get (req, res) ->
     res.send 404
 
-  
   # All other routes to use Angular routing in app/scripts/app.js
   app.route("/partials/*").get index.partials
   app.route("/*").get index.index

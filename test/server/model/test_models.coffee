@@ -127,7 +127,7 @@ describe 'UrlSortedSetOfTags', ()->
               tag_set.add().then (result)->
                 tag_set.get_all().then (result)->
                   tag_set.get_amount().then (result)->
-                    console.log 'total_amount 5 shoule be ', result
+                    console.log 'total_amount 5 should be ', result
                     done()
 
 describe 'User Tests', ()->

@@ -14,6 +14,6 @@ class CleanUrl
     /^(http[^#]+)\/#\/[^#]+$/.test @url
 
   clean_it: ->
-    @url = @url.match(/^(http[^#]+)/)[0]
+    @url = @url.match(/^([^#]+)/)[0]
 
 module.exports = CleanUrl

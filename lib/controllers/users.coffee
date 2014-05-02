@@ -11,9 +11,9 @@ exports.create = (req, res, next) ->
     return res.json(400, 'User exists') if !is_success
     req.logIn newUser, (err) ->
       return next(err) if err
-      res.json req.user.user_id
+      res.json 200, req.user.user_id
   newUser.create(req.body.password, 'local', create_user_callback)
 
 ### Get current user ###
 exports.me = (req, res) ->
-  res.json req.user or null
+  if req.user? then res.json 200, req.user else res.json 400, null

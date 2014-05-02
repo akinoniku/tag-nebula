@@ -8,6 +8,7 @@ class UrlSortedSetOfTags
       @key = "URL:#{@url}"
 
     add: ->
+      console.log 'adding tag', @tag
       return false unless @tag?
       redis_db.zincrby(@key, 1, @tag)
 
@@ -26,7 +27,7 @@ class UrlSortedSetOfTags
       ### Return: promise ###
       redis_db.zscore(@key, @tag)
 
-    get_top: (amount)->
+    get_top: (amount=5)->
       ### Return: promise ###
       redis_db.zrevrange(@key, 0, amount-1)
 

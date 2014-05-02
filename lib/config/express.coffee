@@ -6,9 +6,10 @@ compression = require("compression")
 bodyParser = require("body-parser")
 methodOverride = require("method-override")
 cookieParser = require("cookie-parser")
+raw_redis = require("redis")
 redis = require('then-redis');
 redis_db = redis.createClient()
-session = require("express-session")
+session = require('express-session')
 RedisStore = require('connect-redis')(session)
 errorHandler = require("errorhandler")
 path = require("path")
@@ -44,7 +45,8 @@ module.exports = (app) ->
   app.use bodyParser()
   app.use methodOverride()
   app.use cookieParser()
-  app.use session({store: new RedisStore({client: require("redis").createClient()}), secret: 'keyboard cat', cookie: { maxAge: 60000 }})
+  app.use session({secret: 'keyboard cat' , cookie: { maxAge: 60000 }})
+  #app.use session({store: new RedisStore(), secret: 'keyboard cat', cookie: { maxAge: 60000 }})
 
   # Use passport session
   app.use passport.initialize()

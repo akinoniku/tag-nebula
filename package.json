@@ -19,7 +19,9 @@
     "then-redis": "~0.3.12",
     "passport-local": "~1.0.0",
     "passport": "~0.2.0",
-    "crypto": "0.0.3"
+    "crypto": "0.0.3",
+    "underscore": "~1.6.0",
+    "async": "~0.8.0"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
