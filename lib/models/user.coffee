@@ -1,7 +1,8 @@
 "use strict"
-redis = require('then-redis');
+redis = require('redis');
 redis_db = redis.createClient()
 crypto = require("crypto")
+async = require('async')
 
 class User
   constructor: (@user_id, @provider='local') ->
@@ -12,35 +13,34 @@ class User
     @callback = null
 
   create: (raw_password, provider='local', callback=null) ->
-    ### @return: promise or callback ###
-    @is_exists().then (is_exists)=>
-      return callback(false) if !!is_exists
-      @salt = @make_salt()
-      @hashed_password = @encrypt_password(raw_password)
-      if callback?
-        redis_db.hmset(@key, 'salt', @salt, 'hashed_password', @hashed_password, 'provider', provider).then (results)->
-          callback(results)
-      else
-        redis_db.hmset(@key, 'salt', @salt, 'hashed_password', @hashed_password, 'provider', provider)
+    async.waterfall [
+      (cb)=>@is_exists(cb)
+      (is_exists ,cb)=>
+        return cb('User exists') if !!is_exists
+        @salt = @make_salt()
+        @hashed_password = @encrypt_password(raw_password)
+        redis_db.hmset(@key, 'salt', @salt, 'hashed_password', @hashed_password, 'provider', provider, cb)
+    ], callback
 
   login: (raw_password, provider='local', callback) ->
-    ### @return: bool ###
-    redis_db.hgetall(@key).then (user_results)=>
-      @hashed_password = user_results['hashed_password']
-      @salt = user_results['salt']
+    async.series [
+      (cb) => redis_db.hgetall(@key, cb)
+    ], (err, user_results)=>
+      @hashed_password = user_results[0]['hashed_password']
+      @salt = user_results[0]['salt']
       @logined = @authenticate(raw_password)
-      callback(@logined)
+      err = if @logined then null else 'failed'
+      callback(err, @logined)
 
   is_logined: ->
     @logined
 
-  remove: ->
-    ### @return: promise ###
-    redis_db.del(@key)
+  remove: (cb)->
+    redis_db.del(@key, cb)
 
-  is_exists: ->
+  is_exists: (cb)->
     ### @return: promise ###
-    redis_db.exists(@key)
+    redis_db.exists(@key, cb)
 
   make_key: (user_id=null) ->
     user_id ?= @user_id

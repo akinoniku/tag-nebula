@@ -3,6 +3,8 @@ UrlSortedSetOfTags = require '../../../lib/models/url_sorted_set_of_tags'
 TagSetOfUserUrl= require '../../../lib/models/tag_set_of_user_url'
 User = require '../../../lib/models/user'
 should = require('should')
+async = require('async')
+_ = require('underscore')
 
 user_id = 1
 url = 'http://xingqiniang.com/'
@@ -15,82 +17,54 @@ describe 'UrlSortedSetOfTags', ()->
     done()
 
   afterEach (done) ->
-    url_tag.remove_key()
-    done()
+    url_tag.remove_key(done)
+
+  it 'add test', (done)->
+    url_tag.add(done)
 
   it 'add once', (done)->
-    url_tag.add()
-    url_tag.get_score().then (score)->
-      console.log 'should.js is not working :('
-      console.log score, 'should be 1'
-      #(score).should.equal(1)
-      done()
+    async.series [
+      (cb) -> url_tag.add(cb)
+      (cb) -> url_tag.get_score(cb)
+    ], (err, result)->
+      result[1].should.eql '1'
+      done(err, result)
 
   it 'add twice', (done)->
-    url_tag.add()
-    url_tag.add()
-    url_tag.get_score().then (score)->
-      console.log score, 'should be 2'
-      #(score).should.be.exactly(2)
-      done()
+    async.series [
+      (cb) -> url_tag.add(cb)
+      (cb) -> url_tag.add(cb)
+      (cb) -> url_tag.get_score(cb)
+    ], (err, result)->
+      result[2].should.eql '2'
+      done(err, result)
 
   it 'getScore', (done) ->
-    url_tag.add()
-    url_tag.add()
-    url_tag.minus()
-    url_tag.get_score().then (score)->
-      console.log score, 'should be 1'
-      #(score).should.be.exactly(1)
-      done()
-
+    async.series [
+      (cb) -> url_tag.add(cb)
+      (cb) -> url_tag.add(cb)
+      (cb) -> url_tag.minus(cb)
+      (cb) -> url_tag.get_score(cb)
+    ], (err, result)->
+      result[3].should.eql '1'
+      done(err, result)
 
   it '10 tags', (done)->
-    url_tag.add()
-    url_tag.add()
-    url_tag.add()
-    x_tag = new UrlSortedSetOfTags(url, '星')
-    x_tag.add()
-    x_tag.add()
-    x_tag.add()
+    async.series [
+      (cb)-> (new UrlSortedSetOfTags(url, 1)).add(cb)
+      (cb)-> (new UrlSortedSetOfTags(url, 2)).add(cb)
+      (cb)-> (new UrlSortedSetOfTags(url, 3)).add(cb)
+      (cb)-> (new UrlSortedSetOfTags(url, 4)).add(cb)
+      (cb)-> (new UrlSortedSetOfTags(url, 5)).add(cb)
+      (cb)-> (new UrlSortedSetOfTags(url, 5)).add(cb)
+      (cb)-> (new UrlSortedSetOfTags(url, 5)).add(cb)
+      (cb)-> (new UrlSortedSetOfTags(url, 6)).add(cb)
+      (cb)-> (new UrlSortedSetOfTags(url, 6)).get_top(5, cb)
+    ], (err, result) ->
+      _.last(result).length.should.eql(5)
+      done(err, result)
 
-    q_tag = new UrlSortedSetOfTags(url, '祈')
-    q_tag.add()
-    q_tag.add()
-
-    n_tag = new UrlSortedSetOfTags(url, '娘')
-    n_tag.add()
-
-    w_tag = new UrlSortedSetOfTags(url, 1)
-    w_tag.add()
-    w_tag = new UrlSortedSetOfTags(url, 2)
-    w_tag.add()
-    w_tag = new UrlSortedSetOfTags(url, 3)
-    w_tag.add()
-    w_tag = new UrlSortedSetOfTags(url, 4)
-    w_tag.add()
-    w_tag = new UrlSortedSetOfTags(url, 5)
-    w_tag.add()
-    w_tag = new UrlSortedSetOfTags(url, 6)
-    w_tag.add()
-    w_tag = new UrlSortedSetOfTags(url, 8)
-    w_tag.add()
-    w_tag = new UrlSortedSetOfTags(url, 9)
-    w_tag.add()
-    w_tag = new UrlSortedSetOfTags(url, 10)
-    w_tag.add()
-    w_tag = new UrlSortedSetOfTags(url, 11)
-    w_tag.add()
-
-    w_tag.get_top(6).then (replies) ->
-      console.log replies, 'shoule be array'
-      done()
-    ,
-      (err)->
-        console.log 'err', err
-
-
-# ignore this test
-describe 'UrlSortedSetOfTags', ()->
+describe 'TagSetOfUserUrl', ()->
   before (done) ->
     tag_set = new TagSetOfUserUrl(user_id, url, tag)
     done()
@@ -100,60 +74,53 @@ describe 'UrlSortedSetOfTags', ()->
     done()
 
   it 'add twice', (done)->
-    tag_set.add().then((res)->
-      console.log res, 'should be true'
-    ,
-      (err)->console.log 'err', err
-    )
+    async.series [
+      (cb) -> tag_set.add(cb)
+      (cb) -> tag_set.add(cb)
+    ], (err, result)->
+      (!!err).should.be.ok
+      (!!result).should.be.ok
+      done()
 
-    tag_set.add().then((res)->
-      console.log res, 'should be false'
-    )
-    done()
-
-  it 'add six tags', (done)->
+  it 'add 5 tags', (done)->
     # each could only add 5 tags on one url
-    tag_set = new TagSetOfUserUrl(user_id, url, 1)
-    tag_set.add().then (result)->
-      tag_set = new TagSetOfUserUrl(user_id, url, 2)
-      tag_set.add().then (result)->
-        tag_set = new TagSetOfUserUrl(user_id, url, 3)
-        tag_set.add().then (result)->
-          tag_set = new TagSetOfUserUrl(user_id, url, 4)
-          tag_set.add().then (result)->
-            tag_set = new TagSetOfUserUrl(user_id, url, 5)
-            tag_set.add().then (result)->
-              tag_set = new TagSetOfUserUrl(user_id, url, 6)
-              tag_set.add().then (result)->
-                tag_set.get_all().then (result)->
-                  tag_set.get_amount().then (result)->
-                    console.log 'total_amount 5 should be ', result
-                    done()
+    async.series [
+      (cb)->(new TagSetOfUserUrl(user_id, url, 1)).add cb
+      (cb)->(new TagSetOfUserUrl(user_id, url, 2)).add cb
+      (cb)->(new TagSetOfUserUrl(user_id, url, 3)).add cb
+      (cb)->(new TagSetOfUserUrl(user_id, url, 4)).add cb
+      (cb)->(new TagSetOfUserUrl(user_id, url, 5)).add cb
+      (cb)->(new TagSetOfUserUrl(user_id, url)).get_amount cb
+    ], (err, result) ->
+      _.last(result).should.eql 5
+      done()
 
+user = null
 describe 'User Tests', ()->
   before (done) ->
+    user = new User('aki')
     done()
 
   afterEach (done) ->
-    done()
+    user.remove(done)
 
   it 'create user', (done)->
-    user = new User('aki')
-    user.remove().then ->
-      user.create('123').then (result)->
-        console.log 'OK should be', result
-        user.create('123').then (result)->
-          console.error 'should not be done', result
-        ,
-        (err)->
-          console.log 'should be error', err
-          done()
+    async.series [
+      (cb)->user.remove(cb)
+      (cb)->user.create('123', 'local', cb)
+      (cb)->user.create('123', 'local', cb)
+    ], (err, result) ->
+      (!!err).should.be.ok
+      (!!result[1]).should.be.ok
+      (!!result[2]).should.not.be.ok
+      done()
 
   it 'login user', (done) ->
-    user = new User('aki')
-    user.remove().then ->
-      user.create('123').then ->
-        user.login('123', 'local', (result)->
-          console.log 'login should be true:', result
-          done();
-        )
+    async.series [
+      (cb)-> user.create('123', 'local', cb)
+      (cb)-> user.login('123', 'local', cb)
+    ], (err, result)->
+      (!!err).should.not.be.ok
+      (!!result[0]).should.be.ok
+      (!!result[1]).should.be.ok
+      done()

@@ -1,32 +1,32 @@
 "use strict"
-redis = require('then-redis')
+redis = require('redis')
 redis_db = redis.createClient()
 
 class TagsSortedSetOfUrl
   constructor: (@tag, @url=null) ->
     @key = "TAG:#{@tag}"
 
-  add: ->
-    return false unless @url?
-    redis_db.zincrby(@key, 1, @url)
+  add: (cb)->
+    return cb('Url null') unless @url?
+    redis_db.zincrby(@key, 1, @url, cb)
 
-  minus: ->
-    return false unless @url?
-    redis_db.zincrby(@key, -1, @url)
+  minus: (cb) ->
+    return cb('Url null') unless @url?
+    redis_db.zincrby(@key, -1, @url, cb)
 
-  remove_key: ->
-    redis_db.del(@key)
+  remove_key: (cb) ->
+    redis_db.del(@key, cb)
 
-  remove_tag: ->
-    return false unless @url?
-    redis_db.zrem(@key, @url)
+  remove_tag: (cb)->
+    return cb('Url null') unless @url?
+    redis_db.zrem(@key, @url, cb)
 
-  get_score: ->
+  get_score: (cb)->
     ### Return: promise ###
-    redis_db.zscore(@key, @url)
+    redis_db.zscore(@key, @url, cb)
 
-  get_top: (amount)->
+  get_top: (amount, cb)->
     ### Return: promise ###
-    redis_db.zrevrange(@key, 0, amount-1)
+    redis_db.zrevrange(@key, 0, amount-1, cb)
 
 module.exports = TagsSortedSetOfUrl

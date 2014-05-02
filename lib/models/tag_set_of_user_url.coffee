@@ -1,34 +1,39 @@
 "use strict"
-redis = require('then-redis');
+redis = require('redis');
 redis_db = redis.createClient()
+async = require('async')
 
 class TagSetOfUserUrl
   constructor: (@user_id, @url, @tag=null) ->
     @key = "USER:#{@user_id}:URL:#{@url}"
 
-  get_amount: ->
-    redis_db.scard(@key)
+  get_amount: (cb) ->
+    redis_db.scard(@key, cb)
 
-  is_member: ->
-    return false unless @tag?
-    redis_db.sismember(@key, @tag)
+  is_member: (cb) ->
+    cb('Tag null') unless @tag?
+    redis_db.sismember(@key, @tag, cb)
 
-  add: ->
-    @is_member().then (is_member)=>
-      console.log @key, @tag, 'is_member()', is_member
-      return false if is_member
-      @get_amount().then (amount)=>
-        console.log @key, @tag, 'get_amount()', amount
-        if amount < 5 then redis_db.sadd(@key, @tag) else false
+  add: (cb) ->
+    async.waterfall [
+      (cb)=> @is_member(cb)
+      (is_member, cb) =>
+        return cb('Already Exists') if is_member
+        @get_amount(cb)
+      (amount, cb)=>
+        return cb('Tags full') unless amount < 5
+        redis_db.sadd(@key, @tag, cb)
+      ] , (err, result) ->
+        cb(err, result)
 
-  remove_key: ->
-    redis_db.del(@key)
+  remove_key: (cb)->
+    redis_db.del(@key, cb)
 
-  remove_tag: ->
-    return false unless @tag?
-    redis_db.srem(@key, @tag)
+  remove_tag: (cb) ->
+    return cb('Tag null') unless @tag?
+    redis_db.srem(@key, @tag, cb)
 
-  get_all: ->
-    redis_db.smembers(@key)
+  get_all: (cb) ->
+    redis_db.smembers(@key, cb)
 
 module.exports = TagSetOfUserUrl
