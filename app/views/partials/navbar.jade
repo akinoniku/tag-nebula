@@ -2,4 +2,17 @@
   ul.nav.nav-pills.pull-right
     li(ng-repeat='item in menu', ng-class='{active: isActive(item.link)}')
       a(ng-href='{{item.link}}') {{item.title}}
+  form
+    div.row
+      label email
+        input(type='email', ng-model='user_id')
+      small.error(ng-model='err', ng-show='err')
+    div.row
+      label password
+        input(type='password', ng-model='password')
+      small.error(ng-model='err', ng-show='err')
+    div.row
+      button.button.small(ng-click='login(user_id, password)') login
+      button.button.small(ng-click='create_user (user_id, password)') reg
+
   h3.text-muted tagNebula

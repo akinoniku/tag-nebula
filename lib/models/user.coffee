@@ -26,6 +26,7 @@ class User
     async.series [
       (cb) => redis_db.hgetall(@key, cb)
     ], (err, user_results)=>
+      return callback 'failed' unless user_results?[0]?
       @hashed_password = user_results[0]['hashed_password']
       @salt = user_results[0]['salt']
       @logined = @authenticate(raw_password)

@@ -12,33 +12,36 @@ express = require 'express'
 router = express.Router()
 
 
-###
-Application routes
-###
+### Application routes ###
 module.exports = (app) ->
   
   #tags
   app.route(/\/api\/tags_of_url\/([\w\W]+)$/)
   .post(api.add_tags_of_url)
-  .get(api.get_tags_of_url)
+  .get(api.get_top_tags_of_url)
   .delete(api.remove_tags_of_url)
 
-  app.route(/\/api\/url_of_tags\/([\w\W]+)$/).get(api.get_url_of_tags)
+  app.route(/\/api\/urls_of_tag\/([\w\W]+)$/)
+  .get(api.get_top_url_of_tags)
+
+  app.route(/\/api\/my\/urls_of_tag\/([\w\W]+)$/)
+  .get(api.get_user_urls_of_tag)
+
+  app.route(/\/api\/my\/tags_of_url\/([\w\W]+)$/)
+  .get(api.get_user_tags_of_url)
 
   # user
   app.route("/api/users").post(users.create)
 
   app.route('/login').post passport.authenticate('local', session: true),
     (req, res)->
+      console.log req.body
       status = if req.user.logined then 200 else 401
       res.json status, {}
 
   app.route('/logout').get (req, res)->
     req.logout()
     res.send 200
-
-  app.route('/api/users/me').get passport.authenticate('local', { session: true }),
-  (req, res)->  res.json user_id: req.user.user_id
 
   app.route("/api/me").get(users.me)
 

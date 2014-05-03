@@ -16,7 +16,6 @@
     "connect-redis": "~2.0.0",
     "redis": "~0.10.1",
     "hiredis": "~0.1.16",
-    "then-redis": "~0.3.12",
     "passport-local": "~1.0.0",
     "passport": "~0.2.0",
     "crypto": "0.0.3",

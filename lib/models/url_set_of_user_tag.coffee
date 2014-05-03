@@ -4,7 +4,7 @@ redis_db = redis.createClient()
 
 class UrlSetOfUserTag
   constructor: (@user_id, @tag, @url=null) ->
-    @key = "USER:#{@user_id}:TAG:#{@url}"
+    @key = "USER:#{@user_id}:TAG:#{@tag}"
 
   add: (cb)->
     return cb('Url null') unless @url?

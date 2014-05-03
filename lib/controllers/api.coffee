@@ -11,19 +11,43 @@ CleanUrl = require('../helper/clean_url')
 
 _ = require('underscore')
 
-exports.get_tags_of_url = (req, res) ->
+exports.get_top_tags_of_url = (req, res) ->
   url = req.params[0]
   cleaned_url = (new CleanUrl(url)).clean()
-  (new UrlSortedSetOfTags(cleaned_url)).get_top 5, (err, result)-> res.json 200, result
+  (new UrlSortedSetOfTags(cleaned_url)).get_top 5, (err, result)->
+    return res.json 500, err if err
+    res.json 200, result
 
-exports.get_url_of_tags = (req, res) ->
+exports.get_top_url_of_tags = (req, res) ->
   tags = req.params[0]
-  (new TagsSortedSetOfUrl(tags)).get_top 5, (err, result)-> res.json 200, result
+  (new TagsSortedSetOfUrl(tags)).get_top 5, (err, result)->
+    return res.json 500, err if err
+    res.json 200, result
+
+exports.get_user_tags_of_url = (req, res)->
+  return res.json 401, {} unless req.user?
+  user_id = req.user.user_id
+
+  url = req.params[0]
+  cleaned_url = (new CleanUrl(url)).clean()
+  (new TagSetOfUserUrl(user_id, cleaned_url)).get_all (err, result)->
+    return res.json 500, err if err
+    res.json 200, result
+
+
+exports.get_user_urls_of_tag = (req, res)->
+  return res.json 401, {} unless req.user?
+  user_id = req.user.user_id
+
+  tag = req.params[0]
+  (new UrlSetOfUserTag(user_id, tag)).get_all (err, result)->
+    return res.json 500, err if err
+    res.json 200, result
 
 exports.add_tags_of_url = (req, res) ->
   return res.json 401, {} unless req.user?
-
   user_id = req.user.user_id
+
   tags = req.param('tags')
   url = req.params[0]
   return res.json 400, 'Empty tags or url' if !url or !tags

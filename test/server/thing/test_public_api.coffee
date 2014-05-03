@@ -56,9 +56,33 @@ describe "public api", ->
       res.body.should.eql [tag1]
       done(err, res)
 
-  it "GET /api/url_of_tags/:tags", (done) ->
+  it "GET /api/urls_of_tag/:tags", (done) ->
     request(app)
-    .get("/api/url_of_tags/#{tag1}")
+    .get("/api/urls_of_tag/#{tag1}")
+    .expect(200)
+    .expect("Content-Type", /json/)
+    .end (err, res) ->
+      return done(err) if err
+      res.body.should.be.instanceof(Array);
+      res.body.should.eql [test_url]
+      done(err, res)
+
+  it "GET /api/my/tags_of_url/:url", (done) ->
+    request(app)
+    .get("/api/my/tags_of_url/#{test_url}")
+    .set('cookie', cookie)
+    .expect(200)
+    .expect("Content-Type", /json/)
+    .end (err, res) ->
+      return done(err) if err
+      res.body.should.be.instanceof(Array);
+      res.body.should.eql [tag1]
+      done(err, res)
+
+  it "GET /api/my/urls_of_tag/:tag", (done) ->
+    request(app)
+    .get("/api/my/urls_of_tag/#{tag1}")
+    .set('cookie', cookie)
     .expect(200)
     .expect("Content-Type", /json/)
     .end (err, res) ->
