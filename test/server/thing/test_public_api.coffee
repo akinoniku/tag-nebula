@@ -8,6 +8,9 @@ async = require('async')
 
 cookie = null
 user_aki = null
+test_url = 'http://xingqiniang.com'
+tag1 = 'test_tag'
+
 describe "public api", ->
   beforeEach (done) ->
     user_aki = new User('aki')
@@ -26,35 +29,60 @@ describe "public api", ->
     ], done
 
   afterEach (done) ->
-    user_aki.remove()
     cookie = null
-    done()
+    user_aki.remove done
 
-  it "GET /api/tags_of_url/:url", (done) ->
-    request(app).get("/api/tags_of_url/q111")
+  it "POST /api/tags_of_url/:url", (done) ->
+    request(app)
+    .post("/api/tags_of_url/#{test_url}")
+    .send(tags: tag1)
+    .set('cookie', cookie)
     .expect(200)
     .expect("Content-Type", /json/)
     .end (err, res) ->
       return done(err) if err
       res.body.should.be.instanceof(Array);
-      console.log 'array', res.body.length
-      done()
+      res.body.should.eql [success: tag1]
+      done(err, res)
 
-  #it "POST /api/tags_of_url/:url", (done) ->
-  #  request(app).post("/api/tags_of_url/q11111111")
-  #  .send(tags: 'wifjwijf, iaf, 12312')
-  #  .set('cookie', cookie)
-  #  .expect(201)
-  #  .expect("Content-Type", /json/)
-  #  .end (err, res) ->
-  #    return done(err) if err
-  #    res.body.should.be.instanceof(Array);
-  #    done()
-  #it "no cookie, POST /api/tags_of_url/:url", (done) ->
-  #  request(app).post("/api/tags_of_url/qqqqq")
-  #  .send(tags: '1,2,3')
-  #  .expect(401)
-  #  .expect("Content-Type", /json/)
-  #  .end (err, res) ->
-  #    return done(err) if err
-#      done()
+  it "GET /api/tags_of_url/:url", (done) ->
+    request(app)
+    .get("/api/tags_of_url/#{test_url}")
+    .expect(200)
+    .expect("Content-Type", /json/)
+    .end (err, res) ->
+      return done(err) if err
+      res.body.should.be.instanceof(Array);
+      res.body.should.eql [tag1]
+      done(err, res)
+
+  it "GET /api/url_of_tags/:tags", (done) ->
+    request(app)
+    .get("/api/url_of_tags/#{tag1}")
+    .expect(200)
+    .expect("Content-Type", /json/)
+    .end (err, res) ->
+      return done(err) if err
+      res.body.should.be.instanceof(Array);
+      res.body.should.eql [test_url]
+      done(err, res)
+
+  it "DELETE /api/tags_of_url/:url", (done) ->
+    request(app)
+    .del("/api/tags_of_url/#{test_url}")
+    .send(tags: tag1)
+    .set('cookie', cookie)
+    .expect(200)
+    .expect("Content-Type", /json/)
+    .end (err, res) ->
+      return done(err) if err
+      res.body.should.be.instanceof(Array);
+      res.body.should.eql [success: tag1]
+      done(err, res)
+
+  it "No cookie, POST /api/tags_of_url/:url", (done) ->
+    request(app).post("/api/tags_of_url/#{test_url}")
+    .send(tags: tag1)
+    .set('cookie', null)
+    .expect(401)
+    .end done

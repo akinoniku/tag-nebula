@@ -8,33 +8,36 @@ users = require("./controllers/users")
 #session = require("./controllers/session")
 middleware = require("./middleware")
 
+express = require 'express'
+router = express.Router()
+
 
 ###
 Application routes
 ###
 module.exports = (app) ->
   
-  # Server API Routes
-  app.route("/api/awesomeThings").get api.awesomeThings
-
   #tags
-  app.route("/api/tags_of_url/:url").post(api.add_tags_of_url).get(api.get_tags_of_url)
+  app.route(/\/api\/tags_of_url\/([\w\W]+)$/)
+  .post(api.add_tags_of_url)
+  .get(api.get_tags_of_url)
+  .delete(api.remove_tags_of_url)
+
+  app.route(/\/api\/url_of_tags\/([\w\W]+)$/).get(api.get_url_of_tags)
 
   # user
   app.route("/api/users").post(users.create)
 
-  app.post '/login', passport.authenticate('local', session: true),
+  app.route('/login').post passport.authenticate('local', session: true),
     (req, res)->
       status = if req.user.logined then 200 else 401
       res.json status, {}
 
-
-  app.get '/logout', (req, res)->
+  app.route('/logout').get (req, res)->
     req.logout()
     res.send 200
 
-  app.get '/api/users/me',
-    passport.authenticate('local', { session: true }),
+  app.route('/api/users/me').get passport.authenticate('local', { session: true }),
   (req, res)->  res.json user_id: req.user.user_id
 
   app.route("/api/me").get(users.me)

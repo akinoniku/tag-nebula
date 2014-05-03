@@ -5,6 +5,7 @@ class CleanUrl
   clean: ->
     @shorten_url()
     @clean_it() unless @is_web_app()
+    #@encode_url()
     return @url
 
   shorten_url: ->
@@ -15,5 +16,9 @@ class CleanUrl
 
   clean_it: ->
     @url = @url.match(/^([^#]+)/)[0]
+
+  encode_url: ->
+    @url = encodeURIComponent @url
+
 
 module.exports = CleanUrl

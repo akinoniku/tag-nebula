@@ -22,11 +22,9 @@ class TagsSortedSetOfUrl
     redis_db.zrem(@key, @url, cb)
 
   get_score: (cb)->
-    ### Return: promise ###
     redis_db.zscore(@key, @url, cb)
 
-  get_top: (amount, cb)->
-    ### Return: promise ###
+  get_top: (amount=5, cb)->
     redis_db.zrevrange(@key, 0, amount-1, cb)
 
 module.exports = TagsSortedSetOfUrl

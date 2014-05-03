@@ -11,42 +11,22 @@ CleanUrl = require('../helper/clean_url')
 
 _ = require('underscore')
 
-### Get awesome things ###
-exports.awesomeThings = (req, res) ->
-  res.json [
-    {
-      name: "HTML5 Boilerplate"
-      info: "HTML5 Boilerplate is a professional front-end template for building fast, robust, and adaptable web apps or sites."
-      awesomeness: 10
-    }
-    {
-      name: "AngularJS"
-      info: "AngularJS is a toolset for building the framework most suited to your application development."
-      awesomeness: 10
-    }
-    {
-      name: "Karma"
-      info: "Spectacular Test Runner for JavaScript."
-      awesomeness: 10
-    }
-    {
-      name: "Express"
-      info: "Flexible and minimalist web application framework for node.js."
-      awesomeness: 10
-    }
-  ]
-
 exports.get_tags_of_url = (req, res) ->
-  url = req.param.url
-  (new UrlSortedSetOfTags(url)).get_top 5, (err, result)-> res.json 200, result
+  url = req.params[0]
+  cleaned_url = (new CleanUrl(url)).clean()
+  (new UrlSortedSetOfTags(cleaned_url)).get_top 5, (err, result)-> res.json 200, result
+
+exports.get_url_of_tags = (req, res) ->
+  tags = req.params[0]
+  (new TagsSortedSetOfUrl(tags)).get_top 5, (err, result)-> res.json 200, result
 
 exports.add_tags_of_url = (req, res) ->
   return res.json 401, {} unless req.user?
 
   user_id = req.user.user_id
-  url = req.param('url')
   tags = req.param('tags')
-  return res.json 400, {} if !url or !tags
+  url = req.params[0]
+  return res.json 400, 'Empty tags or url' if !url or !tags
 
   tags_array = (new CleanTags(tags)).clean()
   cleaned_url = (new CleanUrl(url)).clean()
@@ -59,15 +39,45 @@ exports.add_tags_of_url = (req, res) ->
           (new UrlSetOfUserTag(user_id, tag, cleaned_url)).add(cb)
         else
           cb('Tag Exists')
-      (cb)-> (new TagsSortedSetOfUrl(tag, cleaned_url)).add(cb)
-      (cb)-> (new UrlSortedSetOfTags(cleaned_url, tag)).add(cb)
-    ], callback
+      (n, cb)-> (new TagsSortedSetOfUrl(tag, cleaned_url)).add(cb)
+      (n, cb)-> (new UrlSortedSetOfTags(cleaned_url, tag)).add(cb)
+    ], (err, result) ->
+      callback(null, if result then success: tag else failed: tag)
 
   async.parallel(
     tags_array.map (tag)-> (cb)-> add_tag(cb, tag)
   ,
+    (err, result)->
+      return res.json(200, result)
+  )
+
+exports.remove_tags_of_url = (req, res) ->
+  return res.json 401, {} unless req.user?
+
+  user_id = req.user.user_id
+  tags = req.param('tags')
+  url = req.params[0]
+  return res.json 400, 'Empty tags or url' if !url or !tags
+
+  tags_array = (new CleanTags(tags)).clean()
+  cleaned_url = (new CleanUrl(url)).clean()
+
+  remove_tag = (callback, tag)->
+    async.waterfall [
+      (cb)->(new TagSetOfUserUrl(user_id, cleaned_url, tag)).remove_tag(cb)
+      (is_success, cb)->
+        if is_success
+          (new UrlSetOfUserTag(user_id, tag, cleaned_url)).remove_tag(cb)
+        else
+          cb('Tag Not Exists')
+      (n, cb)-> (new TagsSortedSetOfUrl(tag, cleaned_url)).minus(cb)
+      (n, cb)-> (new UrlSortedSetOfTags(cleaned_url, tag)).minus(cb)
+    ], (err, result) ->
+      callback(null, if result then success: tag else failed: tag)
+
+  async.parallel(
+    tags_array.map (tag)-> (cb)-> remove_tag(cb, tag)
+  ,
   (err, result)->
-    console.log 'parallel:err', err
-    console.log 'parallel:result', result
     return res.json(200, result)
   )
