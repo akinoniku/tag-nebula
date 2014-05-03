@@ -7,7 +7,7 @@ passport = require("passport")
 ### Create user ###
 exports.create = (req, res, next) ->
   newUser = new User(req.body.user_id, "local")
-  create_user_callback = (is_success) ->
+  create_user_callback = (err, is_success) ->
     return res.json(400, 'User exists') if !is_success
     req.logIn newUser, (err) ->
       return next(err) if err

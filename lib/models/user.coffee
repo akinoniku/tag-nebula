@@ -39,7 +39,6 @@ class User
     redis_db.del(@key, cb)
 
   is_exists: (cb)->
-    ### @return: promise ###
     redis_db.exists(@key, cb)
 
   make_key: (user_id=null) ->

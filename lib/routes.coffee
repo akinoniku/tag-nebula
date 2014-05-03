@@ -23,7 +23,12 @@ module.exports = (app) ->
   # user
   app.route("/api/users").post(users.create)
 
-  app.post '/login', passport.authenticate('local', { session: true })
+  app.post '/login', passport.authenticate('local', session: true),
+    (req, res)->
+      status = if req.user.logined then 200 else 401
+      res.json status, {}
+
+
   app.get '/logout', (req, res)->
     req.logout()
     res.send 200

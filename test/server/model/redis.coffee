@@ -13,4 +13,7 @@ describe 'test redis', ()->
     redis_db.get('test', (err, reply)->
       reply.should.equal(test1_string)
     )
+    redis_db.del('test', (err, reply)->
+      reply.should.be.ok
+    )
     done()

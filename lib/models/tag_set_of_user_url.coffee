@@ -18,13 +18,12 @@ class TagSetOfUserUrl
     async.waterfall [
       (cb)=> @is_member(cb)
       (is_member, cb) =>
-        return cb('Already Exists') if is_member
+        return cb 'Already Exists' if is_member
         @get_amount(cb)
       (amount, cb)=>
-        return cb('Tags full') unless amount < 5
+        return cb 'Tags full' unless amount < 5
         redis_db.sadd(@key, @tag, cb)
-      ] , (err, result) ->
-        cb(err, result)
+      ] , cb
 
   remove_key: (cb)->
     redis_db.del(@key, cb)

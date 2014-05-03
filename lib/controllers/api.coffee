@@ -38,33 +38,30 @@ exports.awesomeThings = (req, res) ->
 
 exports.get_tags_of_url = (req, res) ->
   url = req.param.url
-  url_tags = new UrlSortedSetOfTags(url)
-  url_tags.get_top(5).then (result)->
-    res.json 200, result
+  (new UrlSortedSetOfTags(url)).get_top 5, (err, result)-> res.json 200, result
 
 exports.add_tags_of_url = (req, res) ->
   return res.json 401, {} unless req.user?
+
   user_id = req.user.user_id
   url = req.param('url')
   tags = req.param('tags')
   return res.json 400, {} if !url or !tags
+
   tags_array = (new CleanTags(tags)).clean()
   cleaned_url = (new CleanUrl(url)).clean()
 
-  added_tag = []
-
-  add_tag = (cb, tag)->
-    (new TagSetOfUserUrl(user_id, cleaned_url, tag)).add().then (result)->
-      if !!result
-        # adding tag
-        (new UrlSetOfUserTag(user_id, tag, cleaned_url)).add()
-        (new TagsSortedSetOfUrl(tag, cleaned_url)).add()
-        (new UrlSortedSetOfTags(cleaned_url, tag)).add()
-        added_tag.push(tag)
-        cb(null, success: tag)
-      else
-        # dup tag
-        cb(null, ignore: tag)
+  add_tag = (callback, tag)->
+    async.waterfall [
+      (cb)->(new TagSetOfUserUrl(user_id, cleaned_url, tag)).add(cb)
+      (is_success, cb)->
+        if is_success
+          (new UrlSetOfUserTag(user_id, tag, cleaned_url)).add(cb)
+        else
+          cb('Tag Exists')
+      (cb)-> (new TagsSortedSetOfUrl(tag, cleaned_url)).add(cb)
+      (cb)-> (new UrlSortedSetOfTags(cleaned_url, tag)).add(cb)
+    ], callback
 
   async.parallel(
     tags_array.map (tag)-> (cb)-> add_tag(cb, tag)
