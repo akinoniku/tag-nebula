@@ -21,8 +21,8 @@ passport.use(
       (username, password, done) ->
         user = new User(username)
 
-        login_callback = (is_success)->
-          done(null, false, { message: 'Login failed.' }) unless is_success
+        login_callback = (err, is_success)->
+          return done(null, false, { message: 'Login failed.' }) unless is_success
           done(null, user)
 
         user.login(password, 'local', login_callback)

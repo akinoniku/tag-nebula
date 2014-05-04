@@ -14,6 +14,7 @@ angular.module('tagNebulaApp')
         password: password
       ).success(
         (user)->
+          user = angular.element.parseJSON user
           $rootScope.currentUser = user
           cb null, user
       ).error(
@@ -39,6 +40,7 @@ angular.module('tagNebulaApp')
         password: password
       ).success(
         (user)->
+          user = angular.element.parseJSON user
           $rootScope.currentUser = user
           cb null, user
       ).error(
@@ -52,7 +54,7 @@ angular.module('tagNebulaApp')
       $http.get('/api/me')
       .success(
         (user)->
-          $rootScope.currentUser = user
+          $rootScope.currentUser = user.user_id
           cb null, user
       ).error cb
 

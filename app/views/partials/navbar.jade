@@ -1,18 +1,26 @@
 .header(ng-controller='NavbarCtrl')
-  ul.nav.nav-pills.pull-right
-    li(ng-repeat='item in menu', ng-class='{active: isActive(item.link)}')
+  ul.inline-list.right
+    //li(ng-repeat='item in menu', ng-class='{active: isActive(item.link)}')
       a(ng-href='{{item.link}}') {{item.title}}
-  form
-    div.row
-      label email
-        input(type='email', ng-model='user_id')
-      small.error(ng-model='err', ng-show='err')
-    div.row
-      label password
-        input(type='password', ng-model='password')
-      small.error(ng-model='err', ng-show='err')
-    div.row
-      button.button.small(ng-click='login(user_id, password)') login
-      button.button.small(ng-click='create_user (user_id, password)') reg
+    li(ng-click='login_form.toggle_form()')
+      a(href='#') {{login_or_username()}}
+    li(ng-click='logout()', ng-if='is_logined')
+      a(href='#') Logout
 
-  h3.text-muted tagNebula
+  form(name='loginForm', ng-if='login_form.get_is_shown()')
+    div.row
+      .small-12.columns
+        label Email
+          input(type='email', required, ng-model='user_id')
+        small.error(ng-show='err') {{err}}
+    div.row
+      .small-12.columns
+        label Password
+          input(type='password', required, ng-minlength='6', ng-model='password')
+        small.error(ng-show='err') {{err}}
+    div.row
+      .small-4.columns
+        button.button.small(ng-click='login(user_id, password)', ng-show='login_form.get_is_login()', ng-disabled="loginForm.$invalid") Login
+        button.button.small(ng-click='create_user(user_id, password)', ng-hide='login_form.get_is_login()', ng-disabled="loginForm.$invalid") Register
+      .small-4.small-offset-4.columns
+        a(href='#', ng-click='login_form.switch_login_and_reg()') New User?

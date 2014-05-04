@@ -1,20 +1,28 @@
 div(ng-include='\'partials/navbar\'')
+.row
+  .small-12.columns
+    form(name='urlForm', novalidate)
+    .row.collapse
+      .small-2.columns
+        span.prefix URL
+      .small-8.columns
+        input(type='text', ng-model='current.url')
+      .small-2.columns
+        a.button.postfix(href='#', ng-click='get_top_tags_by_url()')
+          i.fa.fa-play
+.row
+  .small-10.columns
+    .row.collapse
+      .small-3.columns
+        span.prefix Add tag
+      .small-7.columns
+        input(type='text', ng-model='current.new_tag')
+      .small-2.columns
+        a.button.postfix(href='#', ng-click='add_tag()')
+          i.fa.fa-plus
+.row
+  .small-12.columns(ng-repeat='tag in current.tags')
+    span.label
+      i.fa.fa-tag
+      | {{tag}}
 
-.jumbotron
-  h1
-    | 'Allo, 'Allo!
-
-  p.lead
-    <img src="images/yeoman.png" alt="I'm Yeoman">
-    br
-    | Always a pleasure scaffolding your apps.
-  p
-    a.btn.btn-lg.btn-success(ng-href='#') Splendid!
-    
-.row.marketing
-  div(ng-repeat='thing in awesomeThings')
-    h4 {{thing.name}}
-    p {{thing.info}}
-
-.footer
-  p ♥ from the Yeoman team

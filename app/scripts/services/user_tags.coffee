@@ -5,7 +5,7 @@ angular.module('tagNebulaApp')
   new class UserTags
     get_user_tags_of_url: (url, cb)->
       cb = cb or angular.noop
-      return cb('Need login') unless user.is_logined()
+      return cb('Need login') unless user.is_logged_in()
       $http.get("/api/my/tags_of_url/#{url}")
       .success((tags)->
         cb(null, tags)
@@ -13,7 +13,7 @@ angular.module('tagNebulaApp')
 
     get_user_urls_of_tag: (tag, cb)->
       cb = cb or angular.noop
-      return cb('Need login') unless user.is_logined()
+      return cb('Need login') unless user.is_logged_in()
       $http.get("/api/my/urls_of_tag/#{tag}")
       .success((urls)->
         cb(null, urls)
@@ -21,7 +21,7 @@ angular.module('tagNebulaApp')
 
     add_tag: (url, tags, cb)->
       cb = cb or angular.noop
-      return cb('Need login') unless user.is_logined()
+      return cb('Need login') unless user.is_logged_in()
       $http.post("/api/tags_of_url/#{url}", tags: tags)
       .success((result)->
         cb(null, result)
@@ -29,7 +29,7 @@ angular.module('tagNebulaApp')
 
     remove_tag: (url, tags, cb)->
       cb = cb or angular.noop
-      return cb('Need login') unless user.is_logined()
+      return cb('Need login') unless user.is_logged_in()
       $http.delete("/api/tags_of_url/#{url}", tags: tags)
       .success((result)->
         cb(null, result)

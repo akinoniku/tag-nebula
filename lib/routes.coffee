@@ -35,9 +35,9 @@ module.exports = (app) ->
 
   app.route('/login').post passport.authenticate('local', session: true),
     (req, res)->
-      console.log req.body
       status = if req.user.logined then 200 else 401
-      res.json status, {}
+      user_name = req.user.user_id or 'failed'
+      res.json status, user_name
 
   app.route('/logout').get (req, res)->
     req.logout()

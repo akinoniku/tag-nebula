@@ -2,35 +2,45 @@
 
 angular.module('tagNebulaApp')
   .controller 'NavbarCtrl', ($scope, $location, user) ->
-    console.log user
-    user.current_user(-> $scope.isLogin = user.is_logged_in() )
+    user.current_user(-> $scope.is_logined = user.is_logged_in() )
 
-    $scope.hide_or_display =
-      show_login: false
-      show_reg: false
-      switch_login: -> @show_login = !@show_login
-      switch_reg: -> @show_reg = !@show_reg
+    $scope.login_or_username = ->
+      if $scope.is_logined then $scope.currentUser else 'Login / Reg'
+
+    $scope.login_form =
+      is_shown: false
+      login_or_reg: 'login'
+      show_form: -> @is_shown = !$scope.is_logined
+      hide_form: -> @is_shown = false
+      toggle_form: -> @is_shown = if $scope.is_logined then false else!@is_shown
+      switch_login_and_reg: -> @login_or_reg = if @login_or_reg is 'login' then 'reg' else 'login'
+      get_is_shown: -> @is_shown
+      get_is_login: -> @login_or_reg is 'login'
 
     $scope.err = []
 
     $scope.login = (user_id, password)->
       $scope.err = []
-      console.log user_id, password
       user.login user_id, password, (err, result) ->
-        $scope.err.push err if err
-        $scope.hide_or_display.show_login = false
-        $scope.isLogin = user.is_logged_in()
+        $scope.is_logined = user.is_logged_in()
+        if err
+          console.log err
+          $scope.err.push err
+        else
+          $scope.login_form.hide_form()
 
     $scope.logout = ->
       user.logout ->
-        $scope.isLogin = user.is_logged_in()
+        $scope.is_logined = user.is_logged_in()
 
     $scope.create_user = (user_id, password)->
       $scope.err = []
       user.create_user user_id, password, (err, result)->
-        $scope.err.push err if err
-        $scope.hide_or_display.show_reg = false
-        $scope.isLogin = user.is_logged_in()
+        $scope.is_logined = user.is_logged_in()
+        if err
+          $scope.err.push err
+        else
+          $scope.login_form.hide_form()
 
     $scope.menu = [
       title: 'Home'

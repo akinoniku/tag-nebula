@@ -4,7 +4,8 @@ angular.module('tagNebulaApp', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
-  'ngRoute'
+  'ngRoute',
+  'ngTouch'
 ])
   .config ($routeProvider, $locationProvider) ->
     $routeProvider
