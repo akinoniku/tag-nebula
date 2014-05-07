@@ -30,7 +30,7 @@ angular.module('tagNebulaApp')
     remove_tag: (url, tags, cb)->
       cb = cb or angular.noop
       return cb('Need login') unless user.is_logged_in()
-      $http.delete("/api/tags_of_url/#{url}", tags: tags)
+      $http.post("/api/tags_of_url/del/#{url}", tags: tags)
       .success((result)->
         cb(null, result)
       ).error cb

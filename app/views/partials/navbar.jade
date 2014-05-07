@@ -1,26 +1,35 @@
 .header(ng-controller='NavbarCtrl')
-  ul.inline-list.right
-    //li(ng-repeat='item in menu', ng-class='{active: isActive(item.link)}')
-      a(ng-href='{{item.link}}') {{item.title}}
-    li(ng-click='login_form.toggle_form()')
-      a(href='#') {{login_or_username()}}
-    li(ng-click='logout()', ng-if='is_logined')
-      a(href='#') Logout
+  .row
+    .small-12.columns
+      ul.inline-list.right
+        //li(ng-repeat='item in menu', ng-class='{active: isActive(item.link)}')
+          a(ng-href='{{item.link}}') {{item.title}}
+        li(ng-click='login_form.toggle_login()', ng-if='!is_logined')
+          a(href='#') Login
+
+        li(ng-click='login_form.toggle_reg()', ng-if='!is_logined')
+          a(href='#') Regesiter
+
+        li(ng-if='is_logined')
+          a(href='#') {{currentUser}}
+
+        li(ng-click='logout()', ng-if='is_logined')
+          a(href='#') Logout
 
   form(name='loginForm', ng-if='login_form.get_is_shown()')
     div.row
       .small-12.columns
-        label Email
-          input(type='email', required, ng-model='user_id')
-        small.error(ng-show='err') {{err}}
+        label(ng-class='{error:loginForm.email.$dirty && loginForm.email.$invalid}') Email
+          input(type='email', name='email', required, ng-model='user_id')
+        small.error(ng-show='loginForm.email.$dirty && loginForm.email.$error.required') Email should not be empty
+        small.error(ng-show='loginForm.email.$dirty && loginForm.email.$error.email') Should be an email address
     div.row
       .small-12.columns
-        label Password
-          input(type='password', required, ng-minlength='6', ng-model='password')
-        small.error(ng-show='err') {{err}}
+        label(ng-class='{error:loginForm.password.$dirty && loginForm.password.$invalid}') Password
+          input(type='password', name='password', required, ng-minlength='6', ng-model='password')
+        small.error(ng-show='loginForm.password.$dirty && loginForm.password.$error.required') Password should not be empty
+        small.error(ng-show='loginForm.password.$dirty && loginForm.password.$error.minlength') Should be more than 6 characters
     div.row
       .small-4.columns
         button.button.small(ng-click='login(user_id, password)', ng-show='login_form.get_is_login()', ng-disabled="loginForm.$invalid") Login
         button.button.small(ng-click='create_user(user_id, password)', ng-hide='login_form.get_is_login()', ng-disabled="loginForm.$invalid") Register
-      .small-4.small-offset-4.columns
-        a(href='#', ng-click='login_form.switch_login_and_reg()') New User?

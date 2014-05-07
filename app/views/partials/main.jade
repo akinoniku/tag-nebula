@@ -8,21 +8,42 @@ div(ng-include='\'partials/navbar\'')
       .small-8.columns
         input(type='text', ng-model='current.url')
       .small-2.columns
-        a.button.postfix(href='#', ng-click='get_top_tags_by_url()')
+        a.button.postfix(href='#', ng-click='update_tags()')
           i.fa.fa-play
 .row
-  .small-10.columns
-    .row.collapse
-      .small-3.columns
-        span.prefix Add tag
-      .small-7.columns
-        input(type='text', ng-model='current.new_tag')
-      .small-2.columns
-        a.button.postfix(href='#', ng-click='add_tag()')
-          i.fa.fa-plus
-.row
-  .small-12.columns(ng-repeat='tag in current.tags')
-    span.label
-      i.fa.fa-tag
-      | {{tag}}
+  .small-12.columns
+    h5 Public tags
+    .row(ng-repeat='(tag, score) in current.public_tags', ng-show='score')
+      .small-12.columns(ng-model='is_diaplay')
+        a.row.tag-label(href='', ng-click='get_top_urls_of_tag(tag)')
+          span.small-1.columns
+            i.fa.fa-tag
+          span.small-8.columns {{" "+tag+" "}}
+          span.small-1.columns {{" "+score+" "}}
+          span.small-1.columns
+            i.fa.fa-arrows-v.hover-fa
+        .row.popular-urls(ng-repeat='(url, url_score) in urls_of_tag_set[tag]', ng-if='urls_of_tag_set[tag] && is_diaplay')
+          .small-12.columns
+            a(href='') {{url}}
 
+.row(ng-show='!!currentUser')
+  .small-12.columns
+    h5 My tags
+    a(href='')
+      span.small-3.my-tag-label.tag-label.label.round(ng-repeat='tag in current.user_tags', ng-click='remove_tag(tag)')
+        i.fa.fa-tag
+        | {{" "+tag + " "}}
+        i.fa.fa-trash-o.hover-fa
+
+.row(ng-show='!!currentUser')
+  .small-12.columns
+    h5 Add new tag
+    form(name='addTagForm')
+      .row.collapse
+        .small-3.columns
+          span.prefix Add tag
+        .small-7.columns
+          input(type='text', name='tags', ng-model='current.new_tag')
+        .small-2.columns
+          a.button.postfix(href='#', ng-click='add_tag()')
+            i.fa.fa-plus

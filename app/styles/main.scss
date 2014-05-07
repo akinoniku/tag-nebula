@@ -1,9 +1,23 @@
 @import "settings";
 @import "../bower_components/foundation/scss/foundation";
 @import "../bower_components/font-awesome/scss/font-awesome";
+@import "colors";
 
-#outer-container {
-  padding: 10px;
+
+body, h1, h2, h3, h4, h5, h6, button, input, select, textarea {
+  font-family: "Helvetica Neue", Helvetica Neue, Helvetica, "Heiti SC", Heiti SC, Microsoft Yahei,Hiragino Sans GB,WenQuanYi Micro Hei, Arial, sans-serif;
+}
+
+.tag-label {
+  .hover-fa {
+    display: none;
+  }
+}
+
+.tag-label:hover {
+  .hover-fa {
+    display: inline;
+  }
 }
 
 // Or selectively include components

@@ -16,6 +16,7 @@ angular.module('tagNebulaApp')
         (user)->
           user = angular.element.parseJSON user
           $rootScope.currentUser = user
+          $rootScope.$broadcast 'user.login'
           cb null, user
       ).error(
         (err) ->
@@ -30,6 +31,7 @@ angular.module('tagNebulaApp')
       .success(
         (data)->
           $rootScope.currentUser = null
+          $rootScope.$broadcast 'user.logout'
           cb null, data
       ).error cb
 
@@ -42,6 +44,7 @@ angular.module('tagNebulaApp')
         (user)->
           user = angular.element.parseJSON user
           $rootScope.currentUser = user
+          $rootScope.$broadcast 'user.login'
           cb null, user
       ).error(
         (err)->
@@ -55,8 +58,13 @@ angular.module('tagNebulaApp')
       .success(
         (user)->
           $rootScope.currentUser = user.user_id
+          $rootScope.$broadcast('currentUser.done')
           cb null, user
-      ).error cb
+      ).error(->
+        $rootScope.currentUser = null
+        $rootScope.$broadcast('currentUser.done')
+        cb 'Not logined'
+      )
 
     is_logged_in: ->
       $rootScope.currentUser?

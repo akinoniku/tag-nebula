@@ -6,14 +6,13 @@ angular.module('tagNebulaApp', [
   'ngSanitize',
   'ngRoute',
   'ngTouch'
-])
-  .config ($routeProvider, $locationProvider) ->
-    $routeProvider
-      .when '/',
-        templateUrl: 'partials/main'
-        controller: 'MainCtrl'
-      
-      .otherwise
-        redirectTo: '/'
+]).config ($routeProvider, $locationProvider) ->
+  $routeProvider
+    .when '/',
+      templateUrl: 'partials/main'
+      controller: 'MainCtrl'
 
-    $locationProvider.html5Mode true
+    .otherwise
+      redirectTo: '/'
+
+  $locationProvider.html5Mode true

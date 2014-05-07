@@ -26,6 +26,16 @@ class UrlSortedSetOfTags
       redis_db.zscore(@key, @tag, cb)
 
     get_top: (amount=5, cb)->
-      redis_db.zrevrange(@key, 0, amount-1, cb)
+      redis_db.zrevrange(@key, 0, amount-1, 'withscores', (err, result)->
+        top_arr = {}
+        last_value = null
+        if result?
+          for value, key in result
+            if key%2
+              top_arr[last_value] = value
+            else
+              last_value = value
+        cb(err, top_arr)
+      )
 
 module.exports = UrlSortedSetOfTags

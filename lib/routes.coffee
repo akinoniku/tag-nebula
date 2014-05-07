@@ -5,7 +5,6 @@ passport = require('passport')
 LocalStrategy = require('passport-local').Strategy
 
 users = require("./controllers/users")
-#session = require("./controllers/session")
 middleware = require("./middleware")
 
 express = require 'express'
@@ -16,10 +15,12 @@ router = express.Router()
 module.exports = (app) ->
   
   #tags
+  app.route(/\/api\/tags_of_url\/del\/([\w\W]+)$/) #delete tags
+  .post(api.remove_tags_of_url)
+
   app.route(/\/api\/tags_of_url\/([\w\W]+)$/)
   .post(api.add_tags_of_url)
   .get(api.get_top_tags_of_url)
-  .delete(api.remove_tags_of_url)
 
   app.route(/\/api\/urls_of_tag\/([\w\W]+)$/)
   .get(api.get_top_url_of_tags)

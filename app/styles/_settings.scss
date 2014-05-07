@@ -10,6 +10,7 @@
 // $rem-base: 16px;
 
 // Allows the use of rem-calc() or lower-bound() in your settings
+@import "colors";
 @import "../bower_components/foundation/scss/foundation/functions";
 
 // The default font-size is set to 100% of the browser style sheet (usually 16px)
@@ -60,6 +61,11 @@
 // $success-color: #43AC6A;
 // $warning-color: #f08a24;
 // $info-color: #a0d3e8;
+
+$primary-color: $roKuSyoh !default;
+$secondary-color: $shiRoNeRi !default;
+$alert-color: $errorRed !default;
+$success-color: $grassGreen !default;
 
 // We use these to make sure border radius matches unless we want it different.
 // $global-radius: 3px;
