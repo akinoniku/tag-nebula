@@ -1,35 +1,39 @@
-.header(ng-controller='NavbarCtrl')
+.footer(ng-controller='NavbarCtrl')
   .row
     .small-12.columns
       ul.inline-list.right
         //li(ng-repeat='item in menu', ng-class='{active: isActive(item.link)}')
           a(ng-href='{{item.link}}') {{item.title}}
         li(ng-click='login_form.toggle_login()', ng-if='!is_logined')
-          a(href='#') Login
+          a(href='#') 登录
 
         li(ng-click='login_form.toggle_reg()', ng-if='!is_logined')
-          a(href='#') Regesiter
+          a(href='#') 注册
 
         li(ng-if='is_logined')
           a(href='#') {{currentUser}}
 
         li(ng-click='logout()', ng-if='is_logined')
-          a(href='#') Logout
+          a(href='#') 注销
 
   form(name='loginForm', ng-if='login_form.get_is_shown()')
     div.row
       .small-12.columns
-        label(ng-class='{error:loginForm.email.$dirty && loginForm.email.$invalid}') Email
-          input(type='email', name='email', required, ng-model='user_id')
-        small.error(ng-show='loginForm.email.$dirty && loginForm.email.$error.required') Email should not be empty
-        small.error(ng-show='loginForm.email.$dirty && loginForm.email.$error.email') Should be an email address
+        input(placeholder='邮箱', type='email', name='email', required, ng-model='user_id', ng-class='{error:loginForm.email.$dirty && loginForm.email.$invalid}')
+        small.error(ng-show='loginForm.email.$dirty && loginForm.email.$error.required') 邮箱不能为空啦
+        small.error(ng-show='loginForm.email.$dirty && loginForm.email.$error.email') 这不像个邮箱嘛
     div.row
       .small-12.columns
-        label(ng-class='{error:loginForm.password.$dirty && loginForm.password.$invalid}') Password
-          input(type='password', name='password', required, ng-minlength='6', ng-model='password')
-        small.error(ng-show='loginForm.password.$dirty && loginForm.password.$error.required') Password should not be empty
-        small.error(ng-show='loginForm.password.$dirty && loginForm.password.$error.minlength') Should be more than 6 characters
+        input(placeholder='密码', type='text', name='password', required, ng-minlength='6', ng-model='password', ng-class='{error:loginForm.password.$dirty && loginForm.password.$invalid}')
+        small.error(ng-show='loginForm.password.$dirty && loginForm.password.$error.required') 密码不能为空啦
+        small.error(ng-show='loginForm.password.$dirty && loginForm.password.$error.minlength') 密码至少六位嘛
     div.row
-      .small-4.columns
-        button.button.small(ng-click='login(user_id, password)', ng-show='login_form.get_is_login()', ng-disabled="loginForm.$invalid") Login
-        button.button.small(ng-click='create_user(user_id, password)', ng-hide='login_form.get_is_login()', ng-disabled="loginForm.$invalid") Register
+      .small-12.columns
+        .login(vc-recaptcha, theme='custom', ng-if='!login_form.get_is_login()', ng-model="recaptcha_response", tabindex='1', lang='en', key='recaptcha_challenge')
+          #recaptcha_image(ng-click='recaptcha.reload()')
+          input#recaptcha_response_field(placeholder='请输入以上字符',type='text', required, name='recaptcha_response_field', ng-model='patch')
+    div.row
+      .small-12.columns
+        button.button.small(ng-click='login(user_id, password)', ng-show='login_form.get_is_login()', ng-disabled="loginForm.$invalid") 登录
+        button.button.small(ng-click='create_user(user_id, password, recaptcha_response)', ng-hide='login_form.get_is_login()', ng-disabled="loginForm.$invalid") 注册
+

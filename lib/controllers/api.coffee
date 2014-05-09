@@ -6,11 +6,18 @@ TagsSortedSetOfUrl = require('../models/tags_sorted_set_of_url')
 UrlSortedSetOfTags = require('../models/url_sorted_set_of_tags')
 UrlSetOfUserTag = require('../models/url_set_of_user_tag')
 UrlSetOfUser = require('../models/url_set_of_user')
+TitleOfUrl = require('../models/title_of_url')
 
 CleanTags = require('../helper/clean_tags')
 CleanUrl = require('../helper/clean_url')
 
 _ = require('underscore')
+
+exports.get_titles_of_urls = (req, res) ->
+  urls = req.param('urls')
+  (new TitleOfUrl(urls)).get (err, result)->
+    return res.json 500, err if err
+    res.json 200, result
 
 exports.get_top_tags_of_url = (req, res) ->
   url = req.params[0]
@@ -68,9 +75,14 @@ exports.add_tags_of_url = (req, res) ->
       (n, cb)-> (new UrlSetOfUser(user_id, tag, url)).add(cb)
       (n, cb)-> (new TagsSortedSetOfUrl(tag, cleaned_url)).add(cb)
       (n, cb)-> (new UrlSortedSetOfTags(cleaned_url, tag)).add(cb)
-      (n, cb)-> (new TitleOfUrl(cleaned_url, title)).add(cb)
     ], (err, result) ->
-      callback(null, if result then success: tag else {failed: tag, err: err})
+      url_of_title = {}
+      url_of_title[cleaned_url] = title
+      return callback(null, if result then success: tag else {failed: tag, err: err}) if err
+
+      (new TitleOfUrl(url_of_title)).add((err, result)->
+        callback(null, if result then success: tag else {failed: tag, err: err})
+      )
 
   async.parallel(
     tags_array.map (tag)-> (cb)-> add_tag(cb, tag)

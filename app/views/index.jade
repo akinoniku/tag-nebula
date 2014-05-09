@@ -39,6 +39,10 @@ html.no-js
       (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
       g.src='//www.google-analytics.com/ga.js';
       s.parentNode.insertBefore(g,s)}(document,'script'));
+      var RecaptchaOptions = {
+        theme : 'custom',
+        custom_theme_widget: 'recaptcha_widget'
+      };
 
     <!-- build:js(app) scripts/vendor.js -->
     <!-- bower:js -->
@@ -64,4 +68,5 @@ html.no-js
     <script src="scripts/controllers/main.js"></script>
     <script src="scripts/controllers/navbar.js"></script>
     <!-- endbuild -->
-    
+    <script src="//www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
+    <script src="bower_components/angular-recaptcha/release/angular-recaptcha.js"></script>

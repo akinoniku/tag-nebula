@@ -1,49 +1,66 @@
-div(ng-include='\'partials/navbar\'')
 .row
   .small-12.columns
     form(name='urlForm', novalidate)
+    .row
+      .small-12.columns
+       h3.sub-header.text-center {{current.title}}
+        //input(type='text', name="new_title", ng-model='current.title')
     .row.collapse
-      .small-2.columns
-        span.prefix URL
-      .small-8.columns
-        input(type='text', ng-model='current.url')
+      .small-10.columns
+        input(type='text', name="new_url", ng-model='current.url')
       .small-2.columns
         a.button.postfix(href='#', ng-click='update_tags()')
           i.fa.fa-play
 .row
   .small-12.columns
-    h5 Public tags
+    h5.sub-header.text-center 热门标签
     .row(ng-repeat='(tag, score) in current.public_tags', ng-show='score')
-      .small-12.columns(ng-model='is_diaplay')
-        a.row.tag-label(href='', ng-click='get_top_urls_of_tag(tag)')
-          span.small-1.columns
-            i.fa.fa-tag
-          span.small-8.columns {{" "+tag+" "}}
-          span.small-1.columns {{" "+score+" "}}
-          span.small-1.columns
-            i.fa.fa-arrows-v.hover-fa
-        .row.popular-urls(ng-repeat='(url, url_score) in urls_of_tag_set[tag]', ng-if='urls_of_tag_set[tag] && is_diaplay')
-          .small-12.columns
-            a(href='') {{url}}
+      .small-12.columns
+        .row.tag-label
+          a(href='', ng-click="display_top_urls_of_tag('public', tag)")
+            span.small-1.columns
+              i.fa.fa-tag
+            span.small-8.columns {{" "+tag+" "}}
+            span.small-2.columns.text-center
+              small.score {{" "+score+" "}}
+              i.fa.fa-arrows-v.hover-fa
+        .row.popular-urls(ng-repeat='(url, url_score) in urls_of_tag_set.public[tag]', ng-if='urls_of_tag_set.public[tag]')
+          a(ng-href='{{url}}', target='_blank', )
+            span.small-1.columns
+              i.fa.fa-external-link
+            span.small-8.columns {{titles_of_urls[url] || url}}
+            span.small-2.columns.text-center
+              small {{" "+url_score}}
 
 .row(ng-show='!!currentUser')
   .small-12.columns
-    h5 My tags
-    a(href='')
-      span.small-3.my-tag-label.tag-label.label.round(ng-repeat='tag in current.user_tags', ng-click='remove_tag(tag)')
-        i.fa.fa-tag
-        | {{" "+tag + " "}}
-        i.fa.fa-trash-o.hover-fa
+    h5.sub-header.text-center 我的标签
+    .row(ng-repeat='tag in current.user_tags')
+      .small-12.columns
+        .row.tag-label
+          a(href='', ng-click="display_top_urls_of_tag('my', tag)")
+            span.small-1.columns
+              i.fa.fa-tag
+            span.small-8.columns {{" "+tag+" "}}
+            span.small-2.columns.text-center
+              small.score {{" "+score+" "}}
+              i.fa.fa-arrows-v.hover-fa
+        .row.popular-urls(ng-repeat='(url, url_score) in urls_of_tag_set.my[tag]', ng-if='urls_of_tag_set.my[tag]')
+          a(ng-href='{{url}}', target='_blank', )
+            span.small-1.column
+              i.fa.fa-external-link
+            span.small-8.columns {{titles_of_urls[url] || url}}
+            span.small-2.columns.text-center
+              small {{" "+url_score}}
 
 .row(ng-show='!!currentUser')
   .small-12.columns
-    h5 Add new tag
     form(name='addTagForm')
       .row.collapse
-        .small-3.columns
-          span.prefix Add tag
-        .small-7.columns
-          input(type='text', name='tags', ng-model='current.new_tag')
+        .small-10.columns
+          input(placeholder='添加标签',type='text', name='tags', ng-model='current.new_tag')
         .small-2.columns
           a.button.postfix(href='#', ng-click='add_tag()')
             i.fa.fa-plus
+
+div(ng-include='\'partials/navbar\'')

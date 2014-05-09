@@ -19,10 +19,10 @@ angular.module('tagNebulaApp')
         cb(null, urls)
       ).error cb
 
-    add_tag: (url, tags, cb)->
+    add_tag: (url, tags, title, cb)->
       cb = cb or angular.noop
       return cb('Need login') unless user.is_logged_in()
-      $http.post("/api/tags_of_url/#{url}", tags: tags)
+      $http.post("/api/tags_of_url/#{url}", {tags: tags, title: title})
       .success((result)->
         cb(null, result)
       ).error cb

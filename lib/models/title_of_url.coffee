@@ -5,7 +5,8 @@ async = require 'async'
 _ = require 'underscore'
 
 class TitleOfUrl
-  constructor: (@url_title) ->
+  constructor: (url_title_arr_or_obj) ->
+    @url_title = url_title_arr_or_obj
     ###
     On set:
       @url_title = {

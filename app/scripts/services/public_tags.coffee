@@ -16,3 +16,16 @@ angular.module('tagNebulaApp')
       .success((urls)->
         cb(null, urls)
       ).error cb
+
+    get_titles_of_urls: (urls, cb)->
+      cb = cb or angular.noop
+      $http.post("/api/titles_of_urls", {urls: urls})
+      .success((titles)->
+        url_title_obj = {}
+        _.each(urls, (url, key) ->
+          url_title_obj[url] = titles[key]
+        )
+        cb(null, url_title_obj)
+      ).error cb
+
+

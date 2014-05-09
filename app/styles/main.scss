@@ -6,6 +6,15 @@
 
 body, h1, h2, h3, h4, h5, h6, button, input, select, textarea {
   font-family: "Helvetica Neue", Helvetica Neue, Helvetica, "Heiti SC", Heiti SC, Microsoft Yahei,Hiragino Sans GB,WenQuanYi Micro Hei, Arial, sans-serif;
+  background-color: $shiRoNeRi;
+}
+
+.container {
+  margin-top: 1em;
+}
+
+.sub-header {
+  color: darken($grassGreen, 10%)
 }
 
 .tag-label {
@@ -18,7 +27,31 @@ body, h1, h2, h3, h4, h5, h6, button, input, select, textarea {
   .hover-fa {
     display: inline;
   }
+  .score {
+    display: none;
+  }
 }
+
+.tag-label{
+  min-height: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.popular-urls{
+  min-height: 1.3em;
+  a {
+    color: $grassGreen;
+  }
+}
+
+.footer {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  right: 0;
+}
+
+
 
 // Or selectively include components
 // @import

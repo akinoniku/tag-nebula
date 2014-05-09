@@ -5,7 +5,8 @@ angular.module('tagNebulaApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
-  'ngTouch'
+  'ngTouch',
+  'vcRecaptcha'
 ]).config ($routeProvider, $locationProvider) ->
   $routeProvider
     .when '/',

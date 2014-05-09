@@ -35,11 +35,13 @@ angular.module('tagNebulaApp')
           cb null, data
       ).error cb
 
-    create_user: (user_id, password, cb)->
+    create_user: (user_id, password, response, cb)->
       cb = cb or angular.noop
       $http.post('/api/users',
         user_id: user_id
         password: password
+        recaptcha_challenge: response.challenge
+        recaptcha_response: response.response
       ).success(
         (user)->
           user = angular.element.parseJSON user

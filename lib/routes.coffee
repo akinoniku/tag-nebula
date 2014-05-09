@@ -31,8 +31,14 @@ module.exports = (app) ->
   app.route(/\/api\/my\/tags_of_url\/([\w\W]+)$/)
   .get(api.get_user_tags_of_url)
 
+  app.route(/\/api\/titles_of_urls$/)
+  .post(api.get_titles_of_urls)
+
   # user
   app.route("/api/users").post(users.create)
+
+  app.route(/recaptcha_form/)
+  .get(users.recaptcha_form)
 
   app.route('/login').post passport.authenticate('local', session: true),
     (req, res)->
