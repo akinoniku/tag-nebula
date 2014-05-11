@@ -1,0 +1,3 @@
+#alert(ng-controller='AlertCtrl')
+  .alert-box.text-center(ng-repeat='msg in notifications')
+    span {{msg | AlertFilter}}

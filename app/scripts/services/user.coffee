@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('tagNebulaApp')
-.factory 'user', ($rootScope, $http, $cookieStore) ->
+.factory 'user', ($rootScope, $http, $cookieStore, apiRoot) ->
   new class user
     # Get currentUser from cookie
     $rootScope.currentUser = $cookieStore.get('user') or null
@@ -9,7 +9,7 @@ angular.module('tagNebulaApp')
 
     login: (user_id, password, cb) ->
       cb = cb or angular.noop
-      $http.post('/login',
+      $http.post("#{apiRoot}/login",
         user_id: user_id
         password: password
       ).success(
@@ -27,7 +27,7 @@ angular.module('tagNebulaApp')
     logout: (cb)->
       cb = cb or angular.noop
       return false unless $rootScope.currentUser?
-      $http.get('logout')
+      $http.get("#{apiRoot}/logout")
       .success(
         (data)->
           $rootScope.currentUser = null
@@ -35,13 +35,13 @@ angular.module('tagNebulaApp')
           cb null, data
       ).error cb
 
-    create_user: (user_id, password, response, cb)->
+    create_user: (user_id, password,  captcha_key, captcha_answer, cb)->
       cb = cb or angular.noop
-      $http.post('/api/users',
+      $http.post("#{apiRoot}/api/users",
         user_id: user_id
         password: password
-        recaptcha_challenge: response.challenge
-        recaptcha_response: response.response
+        captcha_key: captcha_key
+        captcha_answer: captcha_answer
       ).success(
         (user)->
           user = angular.element.parseJSON user
@@ -54,9 +54,16 @@ angular.module('tagNebulaApp')
           cb err
       )
 
+    get_captcha: (cb)->
+      cb = cb or angular.noop
+      $http.get("#{apiRoot}/captcha_image")
+      .success(cb)
+      .error(cb)
+
+
     current_user: (cb)->
       cb = cb or angular.noop
-      $http.get('/api/me')
+      $http.get("#{apiRoot}/api/me")
       .success(
         (user)->
           $rootScope.currentUser = user.user_id

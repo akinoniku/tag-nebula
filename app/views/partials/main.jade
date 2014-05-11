@@ -1,16 +1,19 @@
+div(ng-include='\'partials/alert\'')
+
 .row
   .small-12.columns
     form(name='urlForm', novalidate)
     .row
       .small-12.columns
        h3.sub-header.text-center {{current.title}}
+         small {{current.url}}
         //input(type='text', name="new_title", ng-model='current.title')
-    .row.collapse
-      .small-10.columns
-        input(type='text', name="new_url", ng-model='current.url')
-      .small-2.columns
-        a.button.postfix(href='#', ng-click='update_tags()')
-          i.fa.fa-play
+    //.row.collapse
+      //.small-10.columns
+      //  input(type='text', name="new_url", ng-model='current.url')
+      //.small-2.columns
+      //  a.button.postfix(href='#', ng-click='update_tags()')
+      //    i.fa.fa-play
 .row
   .small-12.columns
     h5.sub-header.text-center 热门标签
@@ -22,8 +25,7 @@
               i.fa.fa-tag
             span.small-8.columns {{" "+tag+" "}}
             span.small-2.columns.text-center
-              small.score {{" "+score+" "}}
-              i.fa.fa-arrows-v.hover-fa
+              small {{" "+score+" "}}
         .row.popular-urls(ng-repeat='(url, url_score) in urls_of_tag_set.public[tag]', ng-if='urls_of_tag_set.public[tag]')
           a(ng-href='{{url}}', target='_blank', )
             span.small-1.columns
@@ -43,8 +45,9 @@
               i.fa.fa-tag
             span.small-8.columns {{" "+tag+" "}}
             span.small-2.columns.text-center
-              small.score {{" "+score+" "}}
-              i.fa.fa-arrows-v.hover-fa
+              small
+                i.fa.fa-trash-o(ng-click='remove_tag(tag)')
+              //i.fa.fa-arrows-v.hover-fa
         .row.popular-urls(ng-repeat='(url, url_score) in urls_of_tag_set.my[tag]', ng-if='urls_of_tag_set.my[tag]')
           a(ng-href='{{url}}', target='_blank', )
             span.small-1.column
@@ -53,14 +56,14 @@
             span.small-2.columns.text-center
               small {{" "+url_score}}
 
-.row(ng-show='!!currentUser')
+.row.add-tags(ng-show='!!currentUser')
   .small-12.columns
     form(name='addTagForm')
       .row.collapse
         .small-10.columns
-          input(placeholder='添加标签',type='text', name='tags', ng-model='current.new_tag')
+          input(required, placeholder='添加标签',type='text', name='tags', ng-model='current.new_tag')
         .small-2.columns
-          a.button.postfix(href='#', ng-click='add_tag()')
+          a.button.postfix(href='#', ng-click='add_tag()',  ng-disabled="addTagForm.$invalid")
             i.fa.fa-plus
 
 div(ng-include='\'partials/navbar\'')

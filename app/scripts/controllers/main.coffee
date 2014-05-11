@@ -3,9 +3,9 @@
 angular.module('tagNebulaApp')
   .controller 'MainCtrl', ($scope, $rootScope, user, PublicTags, UserTags) ->
     $scope.current =
-      new_tag: '1231'
-      url: '123'
-      title: 'te_title'
+      new_tag: '萌'
+      url: 'http://xingqiniang.com'
+      title: '星祈娘'
       public_tags: []
       user_tags: []
 

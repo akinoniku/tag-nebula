@@ -37,8 +37,8 @@ module.exports = (app) ->
   # user
   app.route("/api/users").post(users.create)
 
-  app.route(/recaptcha_form/)
-  .get(users.recaptcha_form)
+  app.route(/captcha_image/)
+  .get(users.captcha_image)
 
   app.route('/login').post passport.authenticate('local', session: true),
     (req, res)->

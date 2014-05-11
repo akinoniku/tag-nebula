@@ -9,12 +9,25 @@ body, h1, h2, h3, h4, h5, h6, button, input, select, textarea {
   background-color: $shiRoNeRi;
 }
 
-.container {
+.sub-header {
   margin-top: 1em;
+  color: darken($grassGreen, 10%);
+  small {
+    margin-top: 1em;
+    color: darken($grassGreen, 20%);
+    display: block;
+  }
 }
 
-.sub-header {
-  color: darken($grassGreen, 10%)
+#alert {
+  position: fixed;
+  display: block;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+  .alert-box {
+    opacity: 0.7;
+  }
 }
 
 .tag-label {
@@ -44,11 +57,21 @@ body, h1, h2, h3, h4, h5, h6, button, input, select, textarea {
   }
 }
 
+.add-tags{
+  margin-top: 1em;
+}
+
+.captcha {
+  margin-bottom: 1em;
+}
+
 .footer {
   position: absolute;
   width: 100%;
   bottom: 0;
   right: 0;
+  z-index: 5;
+  background-color: $shiRoNeRi;
 }
 
 

@@ -6,12 +6,17 @@ angular.module('tagNebulaApp', [
   'ngSanitize',
   'ngRoute',
   'ngTouch',
-  'vcRecaptcha'
-]).config ($routeProvider, $locationProvider) ->
+]).config ($routeProvider, $locationProvider, $provide, $sceDelegateProvider) ->
+  apiRoot = $("#linkApiRoot").attr("href")
+  $provide.value "apiRoot", apiRoot
+
+  $sceDelegateProvider.resourceUrlWhitelist(['http*://local.mono.mn:9000/**', 'self']);
+
   $routeProvider
     .when '/',
-      templateUrl: 'partials/main'
+      templateUrl: "#{apiRoot}/partials/main"
       controller: 'MainCtrl'
+
 
     .otherwise
       redirectTo: '/'

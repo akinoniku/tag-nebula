@@ -5,16 +5,24 @@
         //li(ng-repeat='item in menu', ng-class='{active: isActive(item.link)}')
           a(ng-href='{{item.link}}') {{item.title}}
         li(ng-click='login_form.toggle_login()', ng-if='!is_logined')
-          a(href='#') 登录
+          a(href='#')
+            i.fa.fa-sign-in
+            | &nbsp;登录
 
         li(ng-click='login_form.toggle_reg()', ng-if='!is_logined')
-          a(href='#') 注册
+          a(href='#')
+            i.fa.fa-ticket
+            | &nbsp; 注册
 
         li(ng-if='is_logined')
-          a(href='#') {{currentUser}}
+          a(href='#')
+            i.fa.fa-user
+            | &nbsp; {{currentUser}}
 
         li(ng-click='logout()', ng-if='is_logined')
-          a(href='#') 注销
+          a(href='#')
+            i.fa.fa-sign-out
+            | &nbsp;注销
 
   form(name='loginForm', ng-if='login_form.get_is_shown()')
     div.row
@@ -30,10 +38,10 @@
     div.row
       .small-12.columns
         .login(vc-recaptcha, theme='custom', ng-if='!login_form.get_is_login()', ng-model="recaptcha_response", tabindex='1', lang='en', key='recaptcha_challenge')
-          #recaptcha_image(ng-click='recaptcha.reload()')
-          input#recaptcha_response_field(placeholder='请输入以上字符',type='text', required, name='recaptcha_response_field', ng-model='patch')
+          a(href='', ng-click='captcha.reload()')
+            img.captcha.th.radius(ng-src='{{captcha.data.image}}',title='点击刷新')
+          input#recaptcha_response_field(placeholder='请输入以上字符',type='text', required, name='recaptcha_response_field', ng-model='captcha.answer')
     div.row
       .small-12.columns
         button.button.small(ng-click='login(user_id, password)', ng-show='login_form.get_is_login()', ng-disabled="loginForm.$invalid") 登录
         button.button.small(ng-click='create_user(user_id, password, recaptcha_response)', ng-hide='login_form.get_is_login()', ng-disabled="loginForm.$invalid") 注册
-

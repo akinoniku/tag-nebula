@@ -21,7 +21,7 @@
     "crypto": "0.0.3",
     "underscore": "~1.6.0",
     "async": "~0.8.0",
-    "recaptcha": "~1.2.0"
+    "captchagen": "~1.1.0"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
