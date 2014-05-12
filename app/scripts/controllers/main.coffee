@@ -1,13 +1,30 @@
 'use strict'
 
 angular.module('tagNebulaApp')
-  .controller 'MainCtrl', ($scope, $rootScope, user, PublicTags, UserTags) ->
-    $scope.current =
-      new_tag: '萌'
-      url: 'http://xingqiniang.com'
-      title: '星祈娘'
-      public_tags: []
-      user_tags: []
+  .controller 'MainCtrl', ($scope, $rootScope, user, PublicTags, UserTags, apiRoot) ->
+
+    if chrome.tabs?
+      chrome.tabs.query({'active': true, 'windowId': chrome.windows.WINDOW_ID_CURRENT},
+        (tabs)->
+          $scope.current =
+            new_tag: ''
+            url: _.first(tabs).url
+            title: _.first(tabs).title
+            public_tags: []
+            user_tags: []
+      )
+    else
+      $scope.current =
+        new_tag: ''
+        url: 'http://xingqiniang.comxingqiniang.comxingqiniang.comxingqiniang.comxingqiniang.comxingqiniang.com'
+        title: '星祈娘星祈娘星祈娘星祈娘星祈娘星祈娘星祈娘'
+        public_tags: []
+        user_tags: []
+
+    $scope.apiRoot = apiRoot
+    $scope.templates =
+      alert: "#{apiRoot}/partials/alert"
+      navbar: "#{apiRoot}/partials/navbar"
 
     $scope.urls_of_tag_set =
       public: {}

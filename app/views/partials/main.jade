@@ -1,11 +1,12 @@
-div(ng-include='\'partials/alert\'')
+div(ng-include='templates.navbar')
 
 .row
   .small-12.columns
     form(name='urlForm', novalidate)
     .row
       .small-12.columns
-       h3.sub-header.text-center {{current.title}}
+       h3.sub-header.text-center
+         span.main-title {{current.title}}
          small {{current.url}}
         //input(type='text', name="new_title", ng-model='current.title')
     //.row.collapse
@@ -23,14 +24,14 @@ div(ng-include='\'partials/alert\'')
           a(href='', ng-click="display_top_urls_of_tag('public', tag)")
             span.small-1.columns
               i.fa.fa-tag
-            span.small-8.columns {{" "+tag+" "}}
+            span.small-8.columns.long-text(title='{{tag}}') {{" "+tag+" "}}
             span.small-2.columns.text-center
               small {{" "+score+" "}}
         .row.popular-urls(ng-repeat='(url, url_score) in urls_of_tag_set.public[tag]', ng-if='urls_of_tag_set.public[tag]')
           a(ng-href='{{url}}', target='_blank', )
             span.small-1.columns
               i.fa.fa-external-link
-            span.small-8.columns {{titles_of_urls[url] || url}}
+            span.small-8.columns.long-text(title='{{titles_of_urls[url]}}') {{titles_of_urls[url] || url}}
             span.small-2.columns.text-center
               small {{" "+url_score}}
 
@@ -43,7 +44,7 @@ div(ng-include='\'partials/alert\'')
           a(href='', ng-click="display_top_urls_of_tag('my', tag)")
             span.small-1.columns
               i.fa.fa-tag
-            span.small-8.columns {{" "+tag+" "}}
+            span.small-8.columns.long-text(title="{{tag}}") {{" "+tag+" "}}
             span.small-2.columns.text-center
               small
                 i.fa.fa-trash-o(ng-click='remove_tag(tag)')
@@ -52,7 +53,7 @@ div(ng-include='\'partials/alert\'')
           a(ng-href='{{url}}', target='_blank', )
             span.small-1.column
               i.fa.fa-external-link
-            span.small-8.columns {{titles_of_urls[url] || url}}
+            span.small-8.columns.long-text(title='{{titles_of_urls[url]}}') {{titles_of_urls[url] || url}}
             span.small-2.columns.text-center
               small {{" "+url_score}}
 
@@ -66,4 +67,4 @@ div(ng-include='\'partials/alert\'')
           a.button.postfix(href='#', ng-click='add_tag()',  ng-disabled="addTagForm.$invalid")
             i.fa.fa-plus
 
-div(ng-include='\'partials/navbar\'')
+div(ng-include='templates.navbar')

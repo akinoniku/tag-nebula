@@ -1,28 +1,28 @@
 .footer(ng-controller='NavbarCtrl')
   .row
     .small-12.columns
-      ul.inline-list.right
-        //li(ng-repeat='item in menu', ng-class='{active: isActive(item.link)}')
-          a(ng-href='{{item.link}}') {{item.title}}
-        li(ng-click='login_form.toggle_login()', ng-if='!is_logined')
-          a(href='#')
-            i.fa.fa-sign-in
-            | &nbsp;登录
+      ul.inline-list
 
         li(ng-click='login_form.toggle_reg()', ng-if='!is_logined')
           a(href='#')
             i.fa.fa-ticket
             | &nbsp; 注册
 
-        li(ng-if='is_logined')
+        li(ng-click='login_form.toggle_login()', ng-if='!is_logined')
           a(href='#')
-            i.fa.fa-user
-            | &nbsp; {{currentUser}}
+            i.fa.fa-sign-in
+            | &nbsp;登录
 
         li(ng-click='logout()', ng-if='is_logined')
           a(href='#')
             i.fa.fa-sign-out
             | &nbsp;注销
+
+        li.username(ng-if='is_logined', title='{{currentUser}}')
+          a.long-text(href='#')
+            i.fa.fa-user
+            | &nbsp; {{currentUser}}
+
 
   form(name='loginForm', ng-if='login_form.get_is_shown()')
     div.row

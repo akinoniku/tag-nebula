@@ -10,7 +10,7 @@ angular.module('tagNebulaApp', [
   apiRoot = $("#linkApiRoot").attr("href")
   $provide.value "apiRoot", apiRoot
 
-  $sceDelegateProvider.resourceUrlWhitelist(['http*://local.mono.mn:9000/**', 'self']);
+  $sceDelegateProvider.resourceUrlWhitelist(['http*://tag.mono.mn/**', 'self']);
 
   $routeProvider
     .when '/',

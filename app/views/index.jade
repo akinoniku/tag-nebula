@@ -14,10 +14,6 @@ html.no-js
     meta(name="description", content="")
     meta(name="viewport", content="width=device-width")
     // Place favicon.ico and apple-touch-icon.png in the root directory
-    <!-- build:css(app) styles/vendor.css -->
-    <!-- bower:css -->
-    <!-- endbower -->
-    <!-- endbuild -->
     <!-- build:css({.tmp,app}) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
@@ -30,20 +26,13 @@ html.no-js
       <script src="bower_components/json3/lib/json3.min.js"></script>
       <![endif]
 
-    // Add your site or application content here
-    
     div(class="container" ng-view)
 
-    // Google Analytics: change UA-XXXXX-X to be your site's ID.
     script.
-      var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+      var _gaq=[['_setAccount','UA-32474933-2'],['_trackPageview']];
       (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
       g.src='//www.google-analytics.com/ga.js';
       s.parentNode.insertBefore(g,s)}(document,'script'));
-      var RecaptchaOptions = {
-        theme : 'custom',
-        custom_theme_widget: 'recaptcha_widget'
-      };
 
     <!-- build:js(app) scripts/vendor.js -->
     <!-- bower:js -->
