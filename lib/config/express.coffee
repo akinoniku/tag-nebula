@@ -45,8 +45,8 @@ module.exports = (app) ->
   app.use bodyParser()
   app.use methodOverride()
   app.use cookieParser()
-  app.use session({secret: process.env.TAG_SECRET_KEY or 'random^?key?=cat/a', cookie: { maxAge: 60000000 }})
-  #app.use session({store: new RedisStore({client: redis_db}), secret: 'keyboard cat', cookie: { maxAge: 60000 }})
+  #app.use session({secret: process.env.TAG_SECRET_KEY or 'random^?key?=cat/a', cookie: { maxAge: 60000000 }})
+  app.use session({store: new RedisStore({client: redis_db}), secret: process.env.TAG_SECRET_KEY or 'random^?key?=cat/a', cookie: { maxAge: 60000 }})
 
   # Use passport session
   app.use passport.initialize()
