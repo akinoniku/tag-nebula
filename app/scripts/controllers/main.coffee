@@ -79,4 +79,5 @@ angular.module('tagNebulaApp')
 
     $scope.add_tag = ->
       UserTags.add_tag $scope.current.url, $scope.current.new_tag, $scope.current.title, (err, result)->
+        $scope.current.new_tag = ''
         $rootScope.$broadcast('tags.updated')
