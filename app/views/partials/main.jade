@@ -64,7 +64,7 @@ div(ng-include='templates.navbar')
         .small-10.columns
           input(required, placeholder='添加标签',type='text', name='tags', ng-model='current.new_tag')
         .small-2.columns
-          a.button.postfix(href='#', ng-click='add_tag()',  ng-disabled="addTagForm.$invalid")
+          button.button.postfix(href='#', ng-click='add_tag()',  ng-disabled="addTagForm.$invalid")
             i.fa.fa-plus
 
 div(ng-include='templates.navbar')
