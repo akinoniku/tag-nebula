@@ -16,8 +16,8 @@ angular.module('tagNebulaApp')
     else
       $scope.current =
         new_tag: ''
-        url: 'http://xingqiniang.comxingqiniang.comxingqiniang.comxingqiniang.comxingqiniang.comxingqiniang.com'
-        title: '星祈娘星祈娘星祈娘星祈娘星祈娘星祈娘星祈娘'
+        url: 'http://xingqiniang.com'
+        title: '星祈娘'
         public_tags: []
         user_tags: []
 
