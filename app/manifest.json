@@ -1,8 +1,8 @@
 {
-    "name": "星云",
+    "name": "星云签",
     "version": "0.0.1",
     "manifest_version": 2,
-    "description": "Tag Nebula",
+    "description": "",
     "icons": {
         "16": "images/icon-16.png",
         "128": "images/icon-128.png"
@@ -15,11 +15,11 @@
             "19": "images/icon-19.png",
             "38": "images/icon-38.png"
         },
-        "default_title": "tag_nebula_ext",
+        "default_title": "星云签",
         "default_popup": "index.html"
     },
     "omnibox": {
-        "keyword": "tag_nebula_ext"
+        "keyword": "标签,url"
     },
     "permissions": [
         "tabs",
